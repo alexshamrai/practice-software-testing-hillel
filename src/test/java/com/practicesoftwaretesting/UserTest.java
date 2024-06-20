@@ -1,52 +1,21 @@
 package com.practicesoftwaretesting;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.github.javafaker.Faker;
 import com.practicesoftwaretesting.user.UserController;
 import com.practicesoftwaretesting.user.model.LoginRequest;
 import com.practicesoftwaretesting.user.model.LoginResponse;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
 import com.practicesoftwaretesting.user.model.RegisterUserResponse;
-import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.http.ContentType.JSON;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class UserTest {
+public class UserTest extends BaseTest {
 
     private static final String USER_PASSWORD = "12Example#";
     private String userEmail;
 
     UserController userController = new UserController();
-
-    static {
-        configureRestAssured();
-        RestAssured.requestSpecification = new RequestSpecBuilder()
-//                .setBaseUri("https://api.practicesoftwaretesting.com")
-                .log(LogDetail.ALL)
-                .build();
-        RestAssured.responseSpecification = new ResponseSpecBuilder()
-                .log(LogDetail.ALL)
-                .build();
-    }
-
-    private static void configureRestAssured() {
-        var objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-        RestAssured.config = RestAssured.config()
-                .objectMapperConfig(
-                        RestAssured.config()
-                                .getObjectMapperConfig()
-                                .jackson2ObjectMapperFactory((cls, charset) -> objectMapper)
-                );
-    }
 
     @Test
     void testUser() {
