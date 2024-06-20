@@ -1,15 +1,11 @@
 package com.practicesoftwaretesting.user;
 
+import com.practicesoftwaretesting.common.BaseController;
 import com.practicesoftwaretesting.user.model.LoginRequest;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 
-public class UserController {
-
-    private static final String BASE_URI = "https://api.practicesoftwaretesting.com";
+public class UserController extends BaseController {
 
     public Response registerUser(RegisterUserRequest registerUserRequest) {
         return baseClient()
@@ -27,11 +23,5 @@ public class UserController {
         return baseClient()
                 .header("Authorization", "Bearer " + token)
                 .delete("users/" + userId);
-    }
-
-    private RequestSpecification baseClient() {
-        return RestAssured.given()
-                .baseUri(BASE_URI)
-                .contentType(ContentType.JSON);
     }
 }
