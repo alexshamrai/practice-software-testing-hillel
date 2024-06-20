@@ -2,8 +2,12 @@ package com.practicesoftwaretesting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.github.javafaker.Faker;
+import com.practicesoftwaretesting.user.UserController;
+import com.practicesoftwaretesting.user.model.LoginRequest;
+import com.practicesoftwaretesting.user.model.LoginResponse;
+import com.practicesoftwaretesting.user.model.RegisterUserRequest;
+import com.practicesoftwaretesting.user.model.RegisterUserResponse;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -19,10 +23,12 @@ public class UserTest {
     private static final String USER_PASSWORD = "12Example#";
     private String userEmail;
 
+    UserController userController = new UserController();
+
     static {
         configureRestAssured();
         RestAssured.requestSpecification = new RequestSpecBuilder()
-                .setBaseUri("https://api.practicesoftwaretesting.com")
+//                .setBaseUri("https://api.practicesoftwaretesting.com")
                 .log(LogDetail.ALL)
                 .build();
         RestAssured.responseSpecification = new ResponseSpecBuilder()
@@ -47,39 +53,27 @@ public class UserTest {
         userEmail = getUserEmail();
         // Register user
         var registerUserRequest = buildUser();
-        var registerUserResponse = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(registerUserRequest)
-                .post("/users/register")
+        var registerUserResponse = userController.registerUser(registerUserRequest)
                 .as(RegisterUserResponse.class);
         assertNotNull(registerUserResponse.getId());
 
         // Login user
         var loginRequestBody = new LoginRequest(userEmail, USER_PASSWORD);
-        var userLoginResponse = loginUser(loginRequestBody);
+        var userLoginResponse = userController.loginUser(loginRequestBody)
+                .as(LoginResponse.class);
         assertNotNull(userLoginResponse.getAccessToken());
 
         // Login as admin
         var adminLoginRequestBody = new LoginRequest("admin@practicesoftwaretesting.com", "welcome01");
-        var adminloginResponse = loginUser(adminLoginRequestBody);
+        var adminloginResponse = userController.loginUser(adminLoginRequestBody)
+                .as(LoginResponse.class);
 
         // Delete user
         var userId = registerUserResponse.getId();
         var token = adminloginResponse.getAccessToken();
-        RestAssured.given()
-                .contentType(JSON)
-                .header("Authorization", "Bearer " + token)
-                .delete("users/" + userId)
+        userController.deleteUser(userId, token)
                 .then()
                 .statusCode(204);
-    }
-
-    private static LoginResponse loginUser(LoginRequest loginRequestBody) {
-        return RestAssured.given()
-                .contentType(JSON)
-                .body(loginRequestBody)
-                .post("/users/login")
-                .as(LoginResponse.class);
     }
 
     private RegisterUserRequest buildUser() {
