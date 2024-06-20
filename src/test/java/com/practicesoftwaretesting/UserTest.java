@@ -1,5 +1,9 @@
 package com.practicesoftwaretesting;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -8,10 +12,15 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.http.ContentType.JSON;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UserTest {
 
+    private static final String USER_PASSWORD = "12Example#";
+    private String userEmail;
+
     static {
+        configureRestAssured();
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("https://api.practicesoftwaretesting.com")
                 .log(LogDetail.ALL)
@@ -21,64 +30,38 @@ public class UserTest {
                 .build();
     }
 
-    @Test
-    void testBrands() {
-        RestAssured.given()
-                .get("/brands")
-                .then()
-                .statusCode(200);
+    private static void configureRestAssured() {
+        var objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+        RestAssured.config = RestAssured.config()
+                .objectMapperConfig(
+                        RestAssured.config()
+                                .getObjectMapperConfig()
+                                .jackson2ObjectMapperFactory((cls, charset) -> objectMapper)
+                );
     }
 
     @Test
     void testUser() {
+        userEmail = getUserEmail();
         // Register user
-        var registerUserRequest = """
-                {
-                  "first_name": "John",
-                  "last_name": "Lennon",
-                  "address": "Street 1",
-                  "city": "City",
-                  "state": "State",
-                  "country": "Country",
-                  "postcode": "1234AA",
-                  "phone": "0987654321",
-                  "dob": "1941-01-01",
-                  "password": "12Example#",
-                  "email": "john@lennon.example"
-                }
-                """;
+        var registerUserRequest = buildUser();
         var registerUserResponse = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(registerUserRequest)
                 .post("/users/register")
                 .as(RegisterUserResponse.class);
+        assertNotNull(registerUserResponse.getId());
 
         // Login user
-        var loginRequestBody = """
-                {
-                  "email": "john@lennon.example",
-                  "password": "12Example#"
-                }
-                """;
-
-        var userLoginResponse = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(loginRequestBody)
-                .post("/users/login")
-                .as(LoginResponse.class);
+        var loginRequestBody = new LoginRequest(userEmail, USER_PASSWORD);
+        var userLoginResponse = loginUser(loginRequestBody);
+        assertNotNull(userLoginResponse.getAccessToken());
 
         // Login as admin
-        var adminLoginRequestBody = """
-                {
-                  "email": "admin@practicesoftwaretesting.com",
-                  "password": "welcome01"
-                }
-                                """;
-        var adminloginResponse = RestAssured.given()
-                .contentType(JSON)
-                .body(adminLoginRequestBody)
-                .post("/users/login")
-                .as(LoginResponse.class);
+        var adminLoginRequestBody = new LoginRequest("admin@practicesoftwaretesting.com", "welcome01");
+        var adminloginResponse = loginUser(adminLoginRequestBody);
 
         // Delete user
         var userId = registerUserResponse.getId();
@@ -89,5 +72,37 @@ public class UserTest {
                 .delete("users/" + userId)
                 .then()
                 .statusCode(204);
+    }
+
+    private static LoginResponse loginUser(LoginRequest loginRequestBody) {
+        return RestAssured.given()
+                .contentType(JSON)
+                .body(loginRequestBody)
+                .post("/users/login")
+                .as(LoginResponse.class);
+    }
+
+    private RegisterUserRequest buildUser() {
+        return RegisterUserRequest.builder()
+                .firstName("John")
+                .lastName("Lennon")
+                .address("Street 1")
+                .city("City")
+                .state("State")
+                .country("Country")
+                .postcode("1234AA")
+                .phone("0987654321")
+                .dob("1941-01-01")
+                .password(USER_PASSWORD)
+                .email(userEmail)
+                .build();
+    }
+
+    private String getUserEmail() {
+        return Faker.instance()
+                .friends()
+                .character()
+                .toLowerCase()
+                .replaceAll(" ", "") + "@gmail.com";
     }
 }
