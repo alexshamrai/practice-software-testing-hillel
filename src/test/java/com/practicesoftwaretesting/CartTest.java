@@ -3,6 +3,7 @@ package com.practicesoftwaretesting;
 import com.practicesoftwaretesting.cart.CartController;
 import com.practicesoftwaretesting.cart.model.*;
 import com.practicesoftwaretesting.user.model.UpdateCartResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,13 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CartTest extends BaseTest {
 
+    private String authToken;
+
     private static final String PRODUCT_ID = "01J0VCWHNSRYKW2QVNWHJ1N3F3";
 
     CartController cartController = new CartController();
 
+    @BeforeEach
+    void beforeEach() {
+        authToken = registerAndLoginNewUser();
+    }
+
     @Test
     void createUpdateAndDeleteCart() {
-        var createdCart = cartController.createCart()
+        var createdCart = cartController.withToken(authToken).createCart()
                 .as(CreateCartResponse.class);
         assertNotNull(createdCart.getId());
 

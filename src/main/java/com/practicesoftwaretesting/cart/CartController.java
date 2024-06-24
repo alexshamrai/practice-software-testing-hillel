@@ -4,7 +4,7 @@ import com.practicesoftwaretesting.cart.model.AddCartItemRequest;
 import com.practicesoftwaretesting.common.BaseController;
 import io.restassured.response.Response;
 
-public class CartController extends BaseController {
+public class CartController extends BaseController<CartController> {
 
     public Response createCart() {
         return baseClient()
