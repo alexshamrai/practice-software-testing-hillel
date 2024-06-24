@@ -1,9 +1,13 @@
 package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.user.UserController;
+import com.practicesoftwaretesting.user.assertions.LoginResponseAsserts;
+import com.practicesoftwaretesting.user.assertions.RegisterUserResponseAsserts;
 import com.practicesoftwaretesting.user.model.LoginRequest;
+import com.practicesoftwaretesting.user.model.RegisterUserResponse;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UserTest extends BaseTest {
@@ -16,18 +20,28 @@ public class UserTest extends BaseTest {
     void testUser() {
         userEmail = getUserEmail();
         // Register user
-        var registerUserRequest = buildUser(userEmail, DEFAULT_PASSWORD);
-        var registerUserResponse = userController.registerUser(registerUserRequest)
+        var expectedUser = buildUser(userEmail, DEFAULT_PASSWORD);
+        var registerUserResponse = userController.registerUser(expectedUser)
                 .assertStatusCode(201)
                 .as();
-        assertNotNull(registerUserResponse.getId());
+        new RegisterUserResponseAsserts(registerUserResponse)
+                .createdAtIsNotNull()
+                .firstNameIs(expectedUser.getFirstName())
+                .lastNameIs(expectedUser.getLastName())
+                .countryIs(expectedUser.getCountry())
+                .phoneIs(expectedUser.getPhone())
+                .cityIs(expectedUser.getCity())
+                .addressIs(expectedUser.getAddress());
 
         // Login user
         var loginRequestBody = new LoginRequest(userEmail, DEFAULT_PASSWORD);
         var userLoginResponse = userController.loginUser(loginRequestBody)
                 .assertStatusCode(200)
                 .as();
-        assertNotNull(userLoginResponse.getAccessToken());
+        new LoginResponseAsserts(userLoginResponse)
+                .isNotExpired()
+                .accessTokenIsNotNull()
+                .tokenTypeIs("bearer");
 
         // Login as admin
         var adminLoginRequestBody = new LoginRequest("admin@practicesoftwaretesting.com", "welcome01");
