@@ -2,6 +2,7 @@ package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.cart.CartController;
 import com.practicesoftwaretesting.cart.model.*;
+import com.practicesoftwaretesting.user.model.UpdateCartResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
