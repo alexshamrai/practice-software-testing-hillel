@@ -5,7 +5,7 @@ import com.practicesoftwaretesting.user.model.LoginRequest;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
 import io.restassured.response.Response;
 
-public class UserController extends BaseController {
+public class UserController extends BaseController<UserController> {
 
     public Response registerUser(RegisterUserRequest registerUserRequest) {
         return baseClient()
@@ -19,9 +19,8 @@ public class UserController extends BaseController {
                 .post("/users/login");
     }
 
-    public Response deleteUser(String userId, String token) {
+    public Response deleteUser(String userId) {
         return baseClient()
-                .header("Authorization", "Bearer " + token)
                 .delete("users/" + userId);
     }
 }
