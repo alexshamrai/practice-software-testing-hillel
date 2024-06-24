@@ -1,4 +1,4 @@
-package com.practicesoftwaretesting.cart.model;
+package com.practicesoftwaretesting.user.model;
 
 import lombok.Data;
 
