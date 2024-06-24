@@ -1,5 +1,6 @@
 package com.practicesoftwaretesting.cart.model;
 
+import com.practicesoftwaretesting.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

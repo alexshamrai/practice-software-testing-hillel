@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.github.javafaker.Faker;
 import com.practicesoftwaretesting.user.UserController;
 import com.practicesoftwaretesting.user.model.LoginRequest;
-import com.practicesoftwaretesting.user.model.LoginResponse;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
-import com.practicesoftwaretesting.user.model.RegisterUserResponse;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -16,6 +14,8 @@ import io.restassured.filter.log.LogDetail;
 public abstract class BaseTest {
 
     protected static final String DEFAULT_PASSWORD = "12Example#";
+    private static final String ADMIN_EMAIL = "admin@practicesoftwaretesting.com";
+    private static final String ADMIN_PASSWORD = "welcome01";
 
     static {
         configureRestAssured();
@@ -56,6 +56,10 @@ public abstract class BaseTest {
         var userEmail = getUserEmail();
         registerUser(userEmail, DEFAULT_PASSWORD);
         return loginUser(userEmail, DEFAULT_PASSWORD);
+    }
+    
+    public String loginAsAdmin() {
+        return loginUser(ADMIN_EMAIL, ADMIN_PASSWORD);
     }
 
     protected RegisterUserRequest buildUser(String email, String password) {
