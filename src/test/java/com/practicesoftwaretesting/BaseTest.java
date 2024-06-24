@@ -42,13 +42,13 @@ public abstract class BaseTest {
     public void registerUser(String userEmail, String password) {
         var userController = new UserController();
         var registerUserRequest = buildUser(userEmail, password);
-        userController.registerUser(registerUserRequest).as(RegisterUserResponse.class);
+        userController.registerUser(registerUserRequest).as();
     }
 
     public String loginUser(String userEmail, String password) {
         var userController = new UserController();
         var userLoginResponse = userController.loginUser(new LoginRequest(userEmail, password))
-                .as(LoginResponse.class);
+                .as();
         return userLoginResponse.getAccessToken();
     }
 

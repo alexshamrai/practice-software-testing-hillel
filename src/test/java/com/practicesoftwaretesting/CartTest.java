@@ -2,7 +2,6 @@ package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.cart.CartController;
 import com.practicesoftwaretesting.cart.model.*;
-import com.practicesoftwaretesting.user.model.UpdateCartResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ public class CartTest extends BaseTest {
 
     private String authToken;
 
-    private static final String PRODUCT_ID = "01J0VCWHNSRYKW2QVNWHJ1N3F3";
+    private static final String PRODUCT_ID = "01J15FKQMKJK5P57MMMMM83DZB";
 
     CartController cartController = new CartController();
 
@@ -25,21 +24,23 @@ public class CartTest extends BaseTest {
     @Test
     void createUpdateAndDeleteCart() {
         var createdCart = cartController.withToken(authToken).createCart()
-                .as(CreateCartResponse.class);
+                .assertStatusCode(201)
+                .as();
         assertNotNull(createdCart.getId());
 
         var cartId = createdCart.getId();
         var updateCartResponse = cartController.addItemToCart(cartId, new AddCartItemRequest(PRODUCT_ID, 1))
-                .as(UpdateCartResponse.class);
+                .assertStatusCode(200)
+                .as();
         assertNotNull(updateCartResponse.getResult());
 
         var cartDetails = cartController.getCart(cartId)
-                .as(CartDetails.class);
+                .assertStatusCode(200)
+                .as();
         var productIds = cartDetails.getCartItems().stream().map(CartItem::getProductId).toList();
         assertTrue(productIds.contains(PRODUCT_ID));
 
         cartController.deleteCart(cartId)
-                .then()
-                .statusCode(204);
+                .assertStatusCode(204);
     }
 }
