@@ -1,48 +1,51 @@
 package com.practicesoftwaretesting.asserts;
 
+import com.practicesoftwaretesting.pages.RegisterPage;
+
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byId;
 import static com.codeborne.selenide.Selenide.$;
-import static com.practicesoftwaretesting.utils.SelectorUtils.byFor;
 
-public class RegisterPageAsserts {
+public class RegisterPageAsserts extends RegisterPage {
 
     public RegisterPageAsserts hasCorrectInfo() {
-        $(byFor("first_name")).shouldHave(text("First name"));
-        $(byId("first_name")).shouldHave(attribute("placeholder", "First name *"));
+        $(FIRST_NAME_LABEL).shouldHave(text("First name"));
+        $(FIRST_NAME_INPUT).shouldHave(attribute("placeholder", "First name *"));
 
-        $(byFor("last_name")).shouldHave(text("Last name"));
-        $(byId("last_name")).shouldHave(attribute("placeholder", "Your last name *"));
+        $(LAST_NAME_LABEL).shouldHave(text("Last name"));
+        $(LAST_NAME_INPUT).shouldHave(attribute("placeholder", "Your last name *"));
 
-        $(byFor("dob")).shouldHave(text("Date of birth *"));
-        $(byId("dob")).shouldHave(attribute("type", "date"));
+        $(DOB_LABEL).shouldHave(text("Date of birth *"));
+        $(DOB_INPUT).shouldHave(attribute("type", "date"));
 
-        $(byFor("address")).shouldHave(text("Address"));
-        $(byId("address")).shouldHave(attribute("placeholder", "Your Address *"));
+        $(ADDRESS_LABEL).shouldHave(text("Address"));
+        $(ADDRESS_INPUT).shouldHave(attribute("placeholder", "Your Address *"));
 
-        $(byFor("postcode")).shouldHave(text("Postcode"));
-        $(byId("postcode")).shouldHave(attribute("placeholder", "Your Postcode *"));
+        $(POSTCODE_LABEL).shouldHave(text("Postcode"));
+        $(POSTCODE_INPUT).shouldHave(attribute("placeholder", "Your Postcode *"));
 
-        $(byFor("city")).shouldHave(text("City"));
-        $(byId("city")).shouldHave(attribute("placeholder", "Your City *"));
+        $(CITY_LABEL).shouldHave(text("City"));
+        $(CITY_INPUT).shouldHave(attribute("placeholder", "Your City *"));
 
-        $(byFor("state")).shouldHave(text("State"));
-        $(byId("state")).shouldHave(attribute("placeholder", "Your State *"));
+        $(STATE_LABEL).shouldHave(text("State"));
+        $(STATE_INPUT).shouldHave(attribute("placeholder", "Your State *"));
 
-        $(byFor("country")).shouldHave(text("Country"));
-        $(byId("country")).shouldHave(tagName("select"));
-        $(byId("country")).findAll("option")
+        $(COUNTRY_LABEL).shouldHave(text("Country"));
+        $(COUNTRY_INPUT).shouldHave(tagName("select"));
+        $(COUNTRY_INPUT).findAll("option")
                 .filter(text("Your country *"))
                 .shouldHave(size(1))
                 .get(0)
                 .shouldBe(selected);
 
-        $(byFor("email")).shouldHave(text("Email address"));
-        $(byId("email")).shouldHave(attribute("placeholder", "Your email *"));
+        $(PHONE_LABEL).shouldHave(text("Phone"));
+        $(PHONE_INPUT).shouldHave(attribute("placeholder", "Your phone *"));
 
-        $(byFor("password")).shouldHave(text("Password"));
-        $(byId("password")).shouldHave(attribute("placeholder", "Your password *"));
+        $(EMAIL_LABEL).shouldHave(text("Email address"));
+        $(EMAIL_INPUT).shouldHave(attribute("placeholder", "Your email *"));
+
+        $(PASSWORD_LABEL).shouldHave(text("Password"));
+        $(PASSWORD_INPUT).shouldHave(attribute("placeholder", "Your password *"));
 
         return this;
     }
