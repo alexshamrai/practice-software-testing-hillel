@@ -11,6 +11,7 @@
     <modules>
         <module>ui-tests</module>
         <module>api-tests</module>
+        <module>common</module>
     </modules>
 
     <properties>
@@ -31,6 +32,11 @@
             <dependency>
                 <groupId>com.practicesoftwaretesting</groupId>
                 <artifactId>api-tests</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.practicesoftwaretesting</groupId>
+                <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
