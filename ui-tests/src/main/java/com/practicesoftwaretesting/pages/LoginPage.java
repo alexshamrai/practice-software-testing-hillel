@@ -1,5 +1,6 @@
 package com.practicesoftwaretesting.pages;
 
+import com.codeborne.selenide.Selenide;
 import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.text;
@@ -26,5 +27,10 @@ public class LoginPage {
         $(EMAIL_INPUT).setValue(email);
         $(PASSWORD_INPUT).setValue(password);
         $(LOGIN_BUTTON).click();
+    }
+
+    public LoginPage open() {
+        Selenide.open("/auth/login");
+        return this;
     }
 }

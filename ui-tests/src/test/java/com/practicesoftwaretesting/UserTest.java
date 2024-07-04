@@ -4,9 +4,7 @@ import com.practicesoftwaretesting.pages.*;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.open;
-
-public class UserTest {
+public class UserTest extends BaseTest {
 
     HomePage homePage = new HomePage();
     Header header = new Header();
@@ -16,8 +14,8 @@ public class UserTest {
 
     @Test
     void registerNewUserAndLogin() {
-        open("https://practicesoftwaretesting.com/#/");
-        homePage.isLoaded();
+        homePage.open()
+                .isLoaded();
         header.clickSignInMenuItem();
         loginPage.isLoaded()
                 .clickRegisterYourAccount();
@@ -46,7 +44,7 @@ public class UserTest {
                 .postcode("1234")
                 .phone("123456677")
                 .dob("01/01/1946")
-                .email("georgeharrison125@gmail.com")
+                .email("georgeharrison3@gmail.com")
                 .password("12Example#")
                 .build();
     }

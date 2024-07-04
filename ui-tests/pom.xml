@@ -47,6 +47,10 @@
             <groupId>com.practicesoftwaretesting</groupId>
             <artifactId>api-tests</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.practicesoftwaretesting</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
