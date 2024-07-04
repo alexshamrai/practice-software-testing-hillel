@@ -5,6 +5,7 @@ import com.practicesoftwaretesting.pages.AccountPage;
 import com.practicesoftwaretesting.pages.HomePage;
 import com.practicesoftwaretesting.pages.LoginPage;
 import com.practicesoftwaretesting.user.UserSteps;
+import com.practicesoftwaretesting.user.model.UserSearch;
 import com.practicesoftwaretesting.utils.ConfigReader;
 import org.junit.jupiter.api.AfterEach;
 
@@ -13,9 +14,9 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 public abstract class BaseTest {
 
     static ConfigReader configReader = new ConfigReader();
-    private static final String adminEmail = configReader.getProperty("admin.email");
-    private static final String adminPassword = configReader.getProperty("admin.password");
-    private static final String defaultPassword = configReader.getProperty("default.password");
+    protected static final String adminEmail = configReader.getProperty("admin.email");
+    protected static final String adminPassword = configReader.getProperty("admin.password");
+    protected static final String defaultPassword = configReader.getProperty("default.password");
 
     static {
         Configuration.baseUrl = configReader.getProperty("base.url");
@@ -32,15 +33,16 @@ public abstract class BaseTest {
     AccountPage accountPage = new AccountPage();
     HomePage homePage = new HomePage();
 
-    public void registerAndLoginAsNewUser() {
-        var email = userSteps.getUserEmail();
-        userSteps.registerUser(email, defaultPassword);
-
+    public void loginUser(String email, String password) {
         loginPage.open()
                 .isLoaded()
-                .login(email, defaultPassword);
+                .login(email, password);
         accountPage.isLoaded();
         homePage.open();
+    }
+
+    public String registerUser(String email) {
+        return userSteps.registerUser(email, defaultPassword);
     }
 
     public void loginAsAdmin() {
@@ -48,6 +50,14 @@ public abstract class BaseTest {
                 .isLoaded()
                 .login(adminEmail, adminPassword);
         accountPage.isLoaded();
+    }
+
+    public void deleteUser(String userId) {
+        userSteps.deleteUser(userId);
+    }
+
+    public UserSearch searchUsers(String queryPhrase) {
+        return userSteps.searchUsers(queryPhrase);
     }
 
     @AfterEach

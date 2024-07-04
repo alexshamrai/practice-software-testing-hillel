@@ -7,6 +7,8 @@ import com.practicesoftwaretesting.user.model.LoginRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import static com.practicesoftwaretesting.user.UserSteps.getUserEmail;
+import static com.practicesoftwaretesting.user.UserSteps.buildUser;
 
 public class UserTest extends BaseTest {
 

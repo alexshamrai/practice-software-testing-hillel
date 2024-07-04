@@ -1,7 +1,6 @@
 package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.user.UserSteps;
-import com.practicesoftwaretesting.user.model.RegisterUserRequest;
 import com.practicesoftwaretesting.utils.ConfigReader;
 
 public abstract class BaseTest {
@@ -13,8 +12,8 @@ public abstract class BaseTest {
 
     UserSteps userSteps = new UserSteps();
 
-    public void registerUser(String userEmail, String password) {
-        userSteps.registerUser(userEmail, password);
+    public String registerUser(String userEmail, String password) {
+        return userSteps.registerUser(userEmail, password);
     }
 
     public String loginUser(String userEmail, String password) {
@@ -23,17 +22,5 @@ public abstract class BaseTest {
 
     public String loginAsAdmin() {
         return loginUser(adminEmail, adminPassword);
-    }
-
-    public String registerAndLoginNewUser() {
-        return userSteps.registerAndLoginNewUser();
-    }
-
-    public RegisterUserRequest buildUser(String email, String password) {
-        return userSteps.buildUser(email, password);
-    }
-
-    public String getUserEmail() {
-        return userSteps.getUserEmail();
     }
 }

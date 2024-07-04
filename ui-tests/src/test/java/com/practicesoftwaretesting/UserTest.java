@@ -2,6 +2,7 @@ package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.pages.*;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 public class UserTest extends BaseTest {
@@ -33,6 +34,12 @@ public class UserTest extends BaseTest {
         header.assertThat().isSignedId(user.getFirstName() + " " + user.getLastName());
     }
 
+    @AfterEach
+    void cleanup() {
+        var users = searchUsers("Harrison");
+        users.getData().forEach(userToDelete -> deleteUser(userToDelete.getId()));
+    }
+
     private RegisterUserRequest getUser() {
         return RegisterUserRequest.builder()
                 .firstName("George")
@@ -44,7 +51,7 @@ public class UserTest extends BaseTest {
                 .postcode("1234")
                 .phone("123456677")
                 .dob("01/01/1946")
-                .email("georgeharrison3@gmail.com")
+                .email("georgeharrison@gmail.com")
                 .password("12Example#")
                 .build();
     }
