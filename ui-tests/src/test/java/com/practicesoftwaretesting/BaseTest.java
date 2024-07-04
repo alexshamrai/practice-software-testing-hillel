@@ -9,16 +9,13 @@ import com.practicesoftwaretesting.utils.ConfigReader;
 import org.junit.jupiter.api.AfterEach;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
-import static com.practicesoftwaretesting.user.UserSteps.DEFAULT_PASSWORD;
 
 public abstract class BaseTest {
 
-    UserSteps userSteps = new UserSteps();
-    LoginPage loginPage = new LoginPage();
-    AccountPage accountPage = new AccountPage();
-    HomePage homePage = new HomePage();
-
     static ConfigReader configReader = new ConfigReader();
+    private static final String adminEmail = configReader.getProperty("admin.email");
+    private static final String adminPassword = configReader.getProperty("admin.password");
+    private static final String defaultPassword = configReader.getProperty("default.password");
 
     static {
         Configuration.baseUrl = configReader.getProperty("base.url");
@@ -30,13 +27,18 @@ public abstract class BaseTest {
         Configuration.proxyEnabled = Boolean.parseBoolean(configReader.getProperty("proxy.enabled"));
     }
 
+    UserSteps userSteps = new UserSteps();
+    LoginPage loginPage = new LoginPage();
+    AccountPage accountPage = new AccountPage();
+    HomePage homePage = new HomePage();
+
     public void registerAndLoginAsNewUser() {
         var email = userSteps.getUserEmail();
-        userSteps.registerUser(email, DEFAULT_PASSWORD);
+        userSteps.registerUser(email, defaultPassword);
 
         loginPage.open()
                 .isLoaded()
-                .login(email, DEFAULT_PASSWORD);
+                .login(email, defaultPassword);
         accountPage.isLoaded();
         homePage.open();
     }
@@ -44,7 +46,7 @@ public abstract class BaseTest {
     public void loginAsAdmin() {
         loginPage.open()
                 .isLoaded()
-            .login(UserSteps.ADMIN_EMAIL, UserSteps.ADMIN_PASSWORD);
+                .login(adminEmail, adminPassword);
         accountPage.isLoaded();
     }
 
