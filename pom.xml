@@ -81,6 +81,11 @@
                 <artifactId>selenide</artifactId>
                 <version>${selenide.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.codeborne</groupId>
+                <artifactId>selenide-proxy</artifactId>
+                <version>${selenide.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
