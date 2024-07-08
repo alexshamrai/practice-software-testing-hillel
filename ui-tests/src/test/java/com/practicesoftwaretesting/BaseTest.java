@@ -1,13 +1,16 @@
 package com.practicesoftwaretesting;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import com.practicesoftwaretesting.pages.AccountPage;
 import com.practicesoftwaretesting.pages.HomePage;
 import com.practicesoftwaretesting.pages.LoginPage;
 import com.practicesoftwaretesting.user.UserSteps;
 import com.practicesoftwaretesting.user.model.UserSearch;
 import com.practicesoftwaretesting.utils.ConfigReader;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 
@@ -58,6 +61,17 @@ public abstract class BaseTest {
 
     public UserSearch searchUsers(String queryPhrase) {
         return userSteps.searchUsers(queryPhrase);
+    }
+
+    @BeforeAll
+    static void setupAllureReports() {
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
+
+        // or for fine-tuning:
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
+                .screenshots(false)
+                .savePageSource(true)
+        );
     }
 
     @AfterEach
