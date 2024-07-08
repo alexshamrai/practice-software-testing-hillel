@@ -3,9 +3,12 @@ package com.practicesoftwaretesting.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.practicesoftwaretesting.utils.ConfigReader;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+
+import java.util.List;
 
 public abstract class BaseController<T> {
 
@@ -32,7 +35,7 @@ public abstract class BaseController<T> {
     protected RequestSpecification baseClient() {
         var requestSpecification = RestAssured.given()
                 .baseUri(configReader.getProperty("base.api.url"))
-                .filter(new LogRequestFilter())
+                .filters(List.of(new LogRequestFilter(), new AllureRestAssured()))
                 .contentType(ContentType.JSON);
         if (authToken != null) {
             requestSpecification.header("Authorization", "Bearer" + authToken);

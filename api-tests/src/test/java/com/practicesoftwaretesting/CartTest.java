@@ -6,6 +6,7 @@ import com.practicesoftwaretesting.product.ProductController;
 import com.practicesoftwaretesting.product.model.ProductsRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.practicesoftwaretesting.user.UserSteps.getUserEmail;
@@ -37,6 +38,7 @@ public class CartTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Create Update And Delete Cart")
     void createUpdateAndDeleteCart() {
         var createdCart = cartController.withToken(authToken).createCart()
                 .assertStatusCode(201)
