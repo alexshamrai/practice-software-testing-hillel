@@ -2,7 +2,9 @@ package com.practicesoftwaretesting;
 
 import com.practicesoftwaretesting.user.UserSteps;
 import com.practicesoftwaretesting.utils.ConfigReader;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public abstract class BaseTest {
 
     ConfigReader configReader = new ConfigReader();
@@ -13,7 +15,9 @@ public abstract class BaseTest {
     UserSteps userSteps = new UserSteps();
 
     public String registerUser(String userEmail, String password) {
-        return userSteps.registerUser(userEmail, password);
+        var token = userSteps.registerUser(userEmail, password);
+        log.info("User " + userEmail + " is registered. Token: " + token);
+        return token;
     }
 
     public String loginUser(String userEmail, String password) {

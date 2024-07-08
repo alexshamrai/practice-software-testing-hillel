@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.practicesoftwaretesting.utils.ConfigReader;
 import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
-import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
@@ -18,12 +15,6 @@ public abstract class BaseController<T> {
 
     static {
         configureRestAssured();
-        RestAssured.requestSpecification = new RequestSpecBuilder()
-                .log(LogDetail.ALL)
-                .build();
-        RestAssured.responseSpecification = new ResponseSpecBuilder()
-                .log(LogDetail.ALL)
-                .build();
     }
 
     private static void configureRestAssured() {
@@ -41,6 +32,7 @@ public abstract class BaseController<T> {
     protected RequestSpecification baseClient() {
         var requestSpecification = RestAssured.given()
                 .baseUri(configReader.getProperty("base.api.url"))
+                .filter(new LogRequestFilter())
                 .contentType(ContentType.JSON);
         if (authToken != null) {
             requestSpecification.header("Authorization", "Bearer" + authToken);
