@@ -1,4 +1,5 @@
-### This action purpose is to ...
+### This action purpose is to build and test the project using Maven,
+### and then generate and publish the Allure report to GitHub Pages.
 name: Java CI with Maven
 
 on:
@@ -20,5 +21,21 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
-        run: mvn clean test -Dgroups="Smoke"
+      - name: Install dependencies
+        run: mvn install -DskipTests=true
+      - name: Run Test
+        run: mvn clean test -Dgroups="Smoke" -pl api-tests
+
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          gh_pages: gh-pages
+          allure_results: api-tests/target/allure-results
+          allure_report: api-tests/target/allure-report
+
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./api-tests/target/allure-report
