@@ -3,6 +3,7 @@ package com.practicesoftwaretesting;
 import com.practicesoftwaretesting.pages.*;
 import com.practicesoftwaretesting.user.model.RegisterUserRequest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class UserTest extends BaseTest {
@@ -14,6 +15,7 @@ public class UserTest extends BaseTest {
     AccountPage accountPage = new AccountPage();
 
     @Test
+    @Tag("Smoke")
     void registerNewUserAndLogin() {
         homePage.open()
                 .isLoaded();
