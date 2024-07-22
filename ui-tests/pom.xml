@@ -63,5 +63,9 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-selenide</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+        </dependency>
     </dependencies>
 </project>
